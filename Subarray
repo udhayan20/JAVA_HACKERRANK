@@ -1,0 +1,54 @@
+import java.util.*;
+import java.io.*;
+
+public class TestClass 
+{
+    public static void main(String[] args) throws IOException 
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String tLine = br.readLine();
+        if (tLine == null) return;
+        int T = Integer.parseInt(tLine.trim());
+        
+        while (T-- > 0) 
+        {
+            String nLine = br.readLine();
+            if (nLine == null) break;
+            int N = Integer.parseInt(nLine.trim());
+            
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int[] A = new int[N];
+            int count1 = 0;
+            for (int i = 0; i < N; i++) 
+            {
+                A[i] = Integer.parseInt(st.nextToken());
+                if (A[i] == 1) count1++;
+            }
+
+            if (count1 == 0 || count1 == 1 || count1 == N) 
+            {
+                System.out.println(0);
+                continue;
+            }
+
+            if (count1 > (N + 1) / 2) 
+            {
+                System.out.println(-1);
+                continue;
+            }
+
+            int[] dp = new int[N];
+            for (int i = 0; i < N; i++) 
+            {
+                int include = A[i] + (i >= 2 ? dp[i - 2] : 0);
+                int exclude = (i >= 1 ? dp[i - 1] : 0);
+                dp[i] = Math.max(include, exclude);
+            }
+
+            int maxKeep = dp[N - 1];
+            
+            maxKeep = Math.min(maxKeep, count1);
+            System.out.println(count1 - maxKeep);
+        }
+    }
+}
